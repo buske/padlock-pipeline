@@ -26,13 +26,12 @@ Usage: $0 ASSEMBLY DIR
 Script must be run from the root of the padlock-pipeline repo.
 
 ASSEMBLY: the assembly to which the sample will be aligned. This must be a
-  subdirectory of ${refdir}/bismark, already prepared with 
-  "bismark_genome_preparation".
+  subdirectory of ${refdir}, already prepared with "bismark_genome_preparation".
 
 DIR: a sample directory, containing read files with names of the format 
   "<SAMPLE>_L001_R1_001${suffix}". 
 
-- ${refdir}/bismark/phiX must already exist and be prepared with bismark.
+- ${refdir}/phiX/ must already exist and be prepared with bismark.
 - All reads from the same strand will be merged across lanes and file parts.
 - The script creates SGE-compatible bash scripts within the sample directory.
 - Depending on the value of the DISPATCH environment variable, scripts will
@@ -140,7 +139,7 @@ EOF
 
 function unspike {
     local assembly=phiX
-    local ref="${refdir}/bismark/$assembly"
+    local ref="${refdir}/${assembly}"
 
     if [[ ! -e "${dir}/${name}.${assembly}.paired_pe.sam" || ! -e "${dir}/${name}.${assembly}.unpaired_r1.sam" || ! -e "${dir}/${name}.${assembly}.unpaired_r2.sam" ]]; then
 	local script="${dir}/pipeline-align-${assembly}.sh"
@@ -266,7 +265,7 @@ function process_dir {
     logdir="${dir}/log"
     mkdir -pv "${logdir}"
     
-    ref="${refdir}/bismark/${assembly}"
+    ref="${refdir}/${assembly}"
 
     # Step 1a: trim
     trim_sample
