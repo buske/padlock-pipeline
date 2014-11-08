@@ -14,8 +14,8 @@ trimmomatic="java -Xmx2048m -jar ${trimmomatic_jar}"
 bismarkdir="$(pwd)/lib/bismark_v0.12.3"
 bowtiedir="$(pwd)/lib/bowtie-1.1.1"
 adapters="${refdir}/adapters.fa"
-
-# DISPATCH: method for running SGE-compatible subscripts
+bismark2bedgraph="${thisdir}/bismark2bedGraph.modified"
+# DISPATCH: method for handling SGE-compatible subscripts
 DISPATCH="${DISPATCH:-qsub}"
 
 ##### Parse command-line arguments and ensure dependencies exist #####
@@ -66,7 +66,7 @@ function require_dirs {
     done
 }
 
-require_files "${trimmomatic_jar}" "${adapters}"
+require_files "${trimmomatic_jar}" "${adapters}" "${bismark2bedgraph}"
 require_dirs "${srcdir}" "${refdir}" "${bismarkdir}" "${bowtiedir}"
 
 if [[ DISPATCH = "qsub" ]]; then
@@ -81,7 +81,6 @@ elif [[ $# -ne 2 ]]; then
     echo -e "Error: unexpected number of arguments\n" >&2
     usage
 fi
-
 
 export PATH="${bismarkdir}:${bowtiedir}:${PATH}"
 
@@ -108,7 +107,6 @@ function trim_sample {
 #$ -N "${name}.trim"
 #$ -e "${logdir}"
 #$ -o "${logdir}"
-#$ -l hostname="supa*"
 
 set -eu
 
@@ -156,7 +154,6 @@ function unspike {
 #$ -N "${name}.unspike"
 #$ -e "${logdir}"
 #$ -o "${logdir}"
-#$ -l hostname="supa*"
 
 set -eu
 
@@ -192,7 +189,6 @@ function align {
 #$ -N "${name}.align.${assembly}"
 #$ -e "${logdir}"
 #$ -o "${logdir}"
-#$ -l hostname="supa*"
 
 set -eu
 
@@ -227,7 +223,6 @@ function coverage {
 #$ -N "${name}.cov.${assembly}"
 #$ -e "${logdir}"
 #$ -o "${logdir}"
-#$ -l hostname="supa*"
 
 set -eu
 set -o pipefail
@@ -244,7 +239,7 @@ for pairing in paired_pe unpaired_r1 unpaired_r2; do
     fi
 
     "${bismarkdir}/bismark_methylation_extractor" \${extra_args} --comprehensive --merge_non_CpG --report "${dir}/${name}.${assembly}.\${pairing}.sam"
-    "${srcdir}/mybismark2bedGraph" --CX_context --buffer_size 4G -o "${name}.${assembly}.\${pairing}.bedGraph" {,Non_}"CpG_context_${name}.${assembly}.\${pairing}.txt"
+    "${bismark2bedgraph}" --CX_context --buffer_size 4G -o "${name}.${assembly}.\${pairing}.bedGraph" {,Non_}"CpG_context_${name}.${assembly}.\${pairing}.txt"
     mv -v "${name}.${assembly}.\${pairing}.bedGraph" "${dir}/"
     mv -v "${name}.${assembly}.\${pairing}.bismark.cov" "${dir}/"
   fi
