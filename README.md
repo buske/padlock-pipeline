@@ -24,6 +24,8 @@ b) Reference preparation:
   `$ lib/bismark_v0.12.3/bismark_genome_preparation sequences/hg19`
 
 
-2) Running a sample:
+2) Run pipeline on a sample directory (containing paired-end files of the form: `<SAMPLE>_L001_R1_001.fastq.gz`, `<SAMPLE>_L001_R2_001.fastq.gz`):
 
   `$ src/bis_seq/run_sample.sh hg19 /path/to/sample/`
+
+  - Expects files within the directory of the form: 
