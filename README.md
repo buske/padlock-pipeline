@@ -16,14 +16,14 @@ Pipelines for analyzing padlock-captured DNA sequencing data
 
 * Download fasta files for reference genome into subdirectory of `sequences` folder (or symlink them), e.g.:
 
-    mkdir sequences/hg19
-    cd sequences/hg19
-    ln -s /path/to/hg19.fa
+        mkdir sequences/hg19
+        cd sequences/hg19
+        ln -s /path/to/hg19.fa
 
 * Prepare bismark genomic indexes:
 
-    lib/bismark_v0.12.3/bismark_genome_preparation sequences/phiX
-    lib/bismark_v0.12.3/bismark_genome_preparation sequences/hg19
+        lib/bismark_v0.12.3/bismark_genome_preparation sequences/phiX
+        lib/bismark_v0.12.3/bismark_genome_preparation sequences/hg19
 
 
 ### 2. Run pipeline on a sample directory
