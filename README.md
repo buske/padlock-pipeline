@@ -1,8 +1,10 @@
-padlock-pipeline
+padlock-pipeline [ARCHIVED]
 ================
 
-Pipelines for analyzing padlock-captured DNA sequencing data
+> [!NOTE]
+> This project is no longer maintained as of 2014, and no future work is planned.
 
+Pipelines for analyzing padlock-captured DNA sequencing data
 
 
 ### 1. Initial configuration:
